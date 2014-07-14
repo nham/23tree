@@ -66,40 +66,39 @@ impl<K: Ord, V: Copy> BSTNode<K, V> {
     }
 }
 
-
-enum BST<K, V> {
-    Root(Option<BSTNode<K, V>>),
+struct BST<K, V> {
+    root: Option<BSTNode<K, V>>,
 }
 
 impl<K, V> BST<K, V> {
-    fn new() -> BST<K, V> { Root(None) }
+    fn new() -> BST<K, V> { BST { root: None } }
 
     fn leaf(key: K, value: V) -> BST<K, V> {
-        Root(Some(BSTNode::leaf(key, value)))
+        BST { root: Some(BSTNode::leaf(key, value)) }
     }
 
     fn get_node<'a>(&'a self) -> &'a BSTNode<K, V> {
-        match *self {
-            Root(None) => fail!("BST is empty"),
-            Root(Some(ref b)) => b,
+        match self.root {
+            None => fail!("BST is empty"),
+            Some(ref b) => b,
         }
     }
 }
 
 impl<K: Ord, V: Copy> BST<K, V> {
     fn get(&self, key: &K) -> Option<V> {
-        match *self {
-            Root(None) => None,
-            Root(Some(ref n)) => n.get(key)
+        match self.root {
+            None => None,
+            Some(ref n) => n.get(key)
         }
     }
 
     fn insert(&mut self, key: K, value: V) {
-        match *self {
-            Root(None) => {
+        match self.root {
+            None => {
                 *self = BST::leaf(key, value);
             },
-            Root(Some(ref mut n)) => {
+            Some(ref mut n) => {
                 n.insert(key, value);
             }
         }
