@@ -33,7 +33,13 @@ fn getlink<K: Ord, V: Copy>(link: &Link<BSTNode<K,V>>, key: &K) -> Option<V> {
         None => None,
         Some(ref b) => (*b).get(key)
     }
+}
 
+fn insertlink<K: Ord, V: Copy>(link: &mut Link<BSTNode<K,V>>, key: K, value: V) {
+    match *link {
+        None => *link = Some(box BSTNode::leaf(key, value)),
+        Some(ref mut b) => (*b).insert(key, value)
+    }
 }
 
 impl<K: Ord, V: Copy> BSTNode<K, V> {
@@ -49,17 +55,11 @@ impl<K: Ord, V: Copy> BSTNode<K, V> {
         match key.cmp(&self.key) {
             Equal => self.value = value,
             Less =>  {
-                match self.left {
-                    None    => self.left = Some(box BSTNode::leaf(key, value)),
-                    Some(ref mut b) => (*b).insert(key, value),
-                }
+                insertlink(&mut self.left, key, value);
                 self.size += 1;
             },
             Greater => {
-                match self.right {
-                    None    => self.right = Some(box BSTNode::leaf(key, value)),
-                    Some(ref mut b) => (*b).insert(key, value),
-                }
+                insertlink(&mut self.right, key, value);
                 self.size += 1;
             }
         }
