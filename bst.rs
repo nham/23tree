@@ -44,7 +44,7 @@ fn insertlink<K: Ord, V: Copy>(link: &mut Link<BSTNode<K,V>>, key: K, value: V) 
 
 impl<K: Ord, V: Copy> BSTNode<K, V> {
     fn get(&self, key: &K) -> Option<V> {
-        match self.key.cmp(key) {
+        match key.cmp(&self.key) {
             Less => getlink(&self.left, key),
             Greater => getlink(&self.right, key),
             Equal => Some(self.value)
