@@ -57,6 +57,13 @@ fn getlink<K: Ord, V: Copy>(link: &Link<Node23<K,V>>, key: &K) -> Option<V> {
     }
 }
 
+fn insertlink<K: Ord, V: Copy>(link: &mut Link<Node23<K,V>>, key: K, value: V) {
+    match *link {
+        None => *link = Some(box Node23::leaf2(key, value)),
+        Some(ref mut b) => (*b).insert(key, value)
+    }
+}
+
 impl<K: Ord, V: Copy> Node23<K, V> {
     fn get(&self, key: &K) -> Option<V> {
         match *self {
@@ -77,6 +84,24 @@ impl<K: Ord, V: Copy> Node23<K, V> {
                             Greater => getlink(&n.right, key),
                         },
                 },
+        }
+    }
+
+    fn insert(&mut self, key: K, value: V) {
+        match *self {
+            Node2(ref mut n) =>
+                match key.cmp(&n.key) {
+                    Equal => n.value = value,
+                    Less =>  {
+                        insertlink(&mut n.left, key, value);
+                        n.size += 1;
+                    },
+                    Greater => {
+                        insertlink(&mut n.right, key, value);
+                        n.size += 1;
+                    }
+                },
+            Node3(ref mut n) => {}
         }
     }
 }
@@ -103,6 +128,17 @@ impl<K: Ord, V: Copy> Tree23<K, V> {
         match self.root {
             None => None,
             Some(ref n) => n.get(key)
+        }
+    }
+
+    pub fn insert(&mut self, key: K, value: V) {
+        match self.root {
+            None => {
+                *self = Tree23::leaf2(key, value);
+            },
+            Some(ref mut n) => {
+                n.insert(key, value);
+            }
         }
     }
 }
