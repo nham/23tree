@@ -66,14 +66,14 @@ impl<K: Ord, V: Copy> BSTNode<K, V> {
     }
 }
 
-struct BST<K, V> {
+pub struct BST<K, V> {
     root: Option<BSTNode<K, V>>,
 }
 
 impl<K, V> BST<K, V> {
-    fn new() -> BST<K, V> { BST { root: None } }
+    pub fn new() -> BST<K, V> { BST { root: None } }
 
-    fn leaf(key: K, value: V) -> BST<K, V> {
+    pub fn leaf(key: K, value: V) -> BST<K, V> {
         BST { root: Some(BSTNode::leaf(key, value)) }
     }
 
@@ -86,14 +86,14 @@ impl<K, V> BST<K, V> {
 }
 
 impl<K: Ord, V: Copy> BST<K, V> {
-    fn get(&self, key: &K) -> Option<V> {
+    pub fn get(&self, key: &K) -> Option<V> {
         match self.root {
             None => None,
             Some(ref n) => n.get(key)
         }
     }
 
-    fn insert(&mut self, key: K, value: V) {
+    pub fn insert(&mut self, key: K, value: V) {
         match self.root {
             None => {
                 *self = BST::leaf(key, value);
